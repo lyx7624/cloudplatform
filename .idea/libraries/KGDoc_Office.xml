@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="KGDoc.Office">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/KGDoc.Office.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

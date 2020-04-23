@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="KGitext-asian">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/KGitext-asian.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+    <jarDirectory url="jar://$PROJECT_DIR$/lib/KGitext-asian.jar!/" recursive="false" />
+  </library>
+</component>

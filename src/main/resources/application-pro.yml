@@ -1,0 +1,80 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/yunstorage
+    username: root
+    password: Admin123!
+    type: com.zaxxer.hikari.HikariDataSource
+    #连接池配置
+    hikari:
+      minimum-idle: 5
+      idle-timeout: 6000000
+      maximum-pool-size: 10
+      auto-commit: true
+      pool-name: MYHikari
+      max-lifetime: 1800000
+      connection-timeout: 30000
+      connection-test-query: SELECT 1
+  #上传设置
+  servlet:
+    multipart:
+      max-file-size: 512MB
+      max-request-size: 1024MB
+      enabled: false
+      location: D:/home/cloud/file/cache
+
+
+
+
+#mybatis
+mybatis:
+  mapper-locations: classpath*:com.*.mapper/*Mapper.xml
+  type-aliases-package: com.zcyk.login.pojo
+
+#session过期时间
+server:
+  servlet:
+    session:
+      timeout: 43200
+  port: 8080
+
+logging:
+  level:
+    com:
+      zcyk:
+        mapper: debug
+
+#分页插件
+pagehelper:
+  helper-dialect: mysql
+  params: count=countSql
+  reasonable: true
+  support-methods-arguments: true
+
+
+#上传文件映射地址#
+contextPath: D:/home/cloud/file/
+
+#签章服务器地址
+iWebOffice: D:/work/apache-tomcat-9.0.21/webapps/iWebPDF2018/
+
+#rvt文件保存路径
+rvtPath: D:/home/cloud/apache-tomcat-8.5.43/webapps/BIM
+
+
+#外部接口参数
+YunFileUrl: http://39.100.51.224:8020/ZhiJunYun/
+JWUrl: http://jsgl.zfcxjw.cq.gov.cn:7003/CqBim/
+YunFileTocken: e0ec790c53f7
+#筑智建
+ZZJUrl: http://jsgl.zfcxjw.cq.gov.cn:7003/CqBim/
+
+#跨域设置
+allowedOriginsIP: http://139.9.227.94:80
+
+user:
+  token:
+    expire:
+      #24小时在线时间
+      seconds: 86400000
+    jwtSecret: (ZHI:)_$^11244^%$_(CHEN:)_@@++--(YUN:)_++++_.sds_(KE:)
