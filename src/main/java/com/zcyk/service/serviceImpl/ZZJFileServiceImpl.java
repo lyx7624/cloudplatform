@@ -181,7 +181,7 @@ public class ZZJFileServiceImpl implements ZZJFileService {
      */
     public Integer sycFile(String hash, String authorization){
         try {
-            Map map = new HashMap<String,String>();
+            Map map = new HashMap<String,Object>();
             map.put("Hash",hash);
             String res = HttpClientUtils.doPost("http://jsgl.zfcxjw.cq.gov.cn:6010/file/api/v1/FlowJs/Synchronous",map,authorization,"application/x-www-form-urlencoded");
             String item = JSONObject.parseObject(res).getString("item");

@@ -14,6 +14,7 @@ import com.zcyk.service.*;
 import com.zcyk.util.File_upload;
 import com.zcyk.util.iMsgServer2015;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.transaction.annotation.Transactional;
@@ -268,6 +269,55 @@ public class ProjectBimController {
     public ResultData addModel(Model model) throws Exception {
         return projectService.addModel(model);
     }
+
+    /*临时          项目构件   2020-05-19新加 */
+
+
+    /**
+     * 功能描述：新增构件
+     * 开发人员： lyx
+     * 创建时间： 2020/5/19 9:50
+     * 参数：
+     * 返回值：
+     * 异常：
+     */
+    @RequestMapping("/addProjecComponent")
+    public ResultData addComponent(@Valid ProjectComponent projectComponent) throws Exception {
+        String msg = StringUtils.isBlank(projectComponent.getId())?"新增成功":"修改成功";
+        projectService.updateComponent(projectComponent);
+        return ResultData.WRITE("200",msg,null);
+    }
+
+    /**
+     * 功能描述：根据项目获取所有构件
+     * 开发人员： lyx
+     * 创建时间： 2020/5/19 9:50
+     * 参数：
+     * 返回值：
+     * 异常：
+     */
+    @RequestMapping("/getProjectComponent")
+    public ResultData getProjectComponent(String project_id,@RequestParam(defaultValue = "") String search,
+                                          @RequestParam(defaultValue = "1") int pageNum,
+                                          @RequestParam(defaultValue = "10") int pageSize) throws Exception {
+        return ResultData.WRITE("200","成功获取",projectService.getProjectComponent(project_id,pageNum,pageSize));
+    }
+
+    /**
+     * 功能描述：根据项目获取所有构件
+     * 开发人员： lyx
+     * 创建时间： 2020/5/19 9:50
+     * 参数：
+     * 返回值：
+     * 异常：
+     */
+    @RequestMapping("/deleteProjectComponent")
+    public ResultData deleteProjectComponent(String id) throws Exception {
+        projectService.deleteProjectComponent(id);
+        return ResultData.WRITE("200","删除成功",null);
+    }
+
+    /*临时(完)         项目构件   2020-05-19新加 */
 
     /**
      * 功能描述：删除项目模型

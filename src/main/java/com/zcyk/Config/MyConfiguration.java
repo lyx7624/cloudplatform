@@ -9,7 +9,7 @@ import org.springframework.web.servlet.config.annotation.*;
 public class MyConfiguration implements WebMvcConfigurer {
     /* */
 
-    @Value("${AllowedOriginsIP}")
+    @Value("${allowedOriginsIP}")
     String allowedOriginsIP;
     /**
      * SpringBoot设置首页
@@ -28,11 +28,10 @@ public class MyConfiguration implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
 //                .allowedOrigins("*").allowedMethods("*").maxAge(3600).allowCredentials(true);
-                .allowedOrigins(allowedOriginsIP).allowedMethods("*").maxAge(3600).allowCredentials(true)
+                .allowedOrigins("*").allowedMethods("*").maxAge(3600).allowCredentials(true)
                 .allowedHeaders("*")
                 .exposedHeaders("user_token");
 
-//                .allowedOrigins("localhost:8080/*").allowedMethods("*").maxAge(3600).allowCredentials(true);
     }
 
 

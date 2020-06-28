@@ -6,7 +6,7 @@
       <synchronize>true</synchronize>
       <remarks>192.168.110.139</remarks>
       <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
-      <jdbc-url>jdbc:mysql://192.168.110.139:3306/yunStorage</jdbc-url>
+      <jdbc-url>jdbc:mysql://192.168.110.139:3306/yuntestForPro</jdbc-url>
       <driver-properties>
         <property name="autoReconnect" value="true" />
         <property name="zeroDateTimeBehavior" value="CONVERT_TO_NULL" />

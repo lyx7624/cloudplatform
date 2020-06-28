@@ -14,7 +14,7 @@
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="cloudplatfoem" options="-parameters" />
-      <module name="yunstorage" options="-parameters" />
+      <module name="yunstorage" options="-parameters -verbose -Xlint:unchecked -Xlint:deprecation -extdirs D:\work\cloudplatform/lib" />
     </option>
   </component>
 </project>

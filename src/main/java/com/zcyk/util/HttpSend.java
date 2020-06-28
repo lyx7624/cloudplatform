@@ -1,18 +1,25 @@
 package com.zcyk.util;
 
+
+
+
+
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.dahua.openapi.util.MySecureProtocolSocketFactory;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.methods.PostMethod;
-import org.apache.commons.httpclient.methods.RequestEntity;
-import org.apache.commons.httpclient.methods.StringRequestEntity;
-import org.apache.commons.httpclient.params.HttpMethodParams;
-import org.apache.commons.httpclient.protocol.Protocol;
-import org.apache.commons.httpclient.protocol.ProtocolSocketFactory;
 import org.apache.commons.io.IOUtils;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.EntityUtils;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
@@ -26,6 +33,14 @@ import java.util.UUID;
 */
 public class HttpSend {
 
+    private static final CloseableHttpClient httpClient;
+    public static final String CHARSET = "UTF-8";
+    // 采用静态代码块，初始化超时时间配置，再根据配置生成默认httpClient对象
+    static {
+        RequestConfig config = RequestConfig.custom().setConnectTimeout(60000).setSocketTimeout(15000).build();
+        httpClient = HttpClientBuilder.create().setDefaultRequestConfig(config).build();
+    }
+
     public static JSONObject execute(Map<String, Object> paramsMap, String method,String app_id,String secret_id) {
             Map<String, Object> map = paramsInit(paramsMap, app_id, secret_id);
             // 返回json
@@ -38,28 +53,33 @@ public class HttpSend {
 
     public static JSONObject doPost(String url, Map<String, Object> map) {
         String json = JSON.toJSONString(map);
-        ProtocolSocketFactory factory = new MySecureProtocolSocketFactory();
-
-            Protocol.registerProtocol("https", new Protocol("https", factory, 443));
-            HttpClient client = new HttpClient();
-            client.getParams().setParameter(HttpMethodParams.HTTP_CONTENT_CHARSET, "UTF-8");
-            PostMethod method = new PostMethod(url);
-            System.out.println(url);
-            JSONObject jsonObject = new JSONObject();
-            try {
-                RequestEntity entity = new StringRequestEntity(json, "application/json", "UTF-8");
-                method.setRequestEntity(entity);
-                client.executeMethod(method);
-
-                InputStream inputStream = method.getResponseBodyAsStream();
-                String result = IOUtils.toString(inputStream, "UTF-8");
-                jsonObject = JSONObject.parseObject(result);
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-                method.releaseConnection();
+        CloseableHttpResponse response = null;
+        String resultString = "";
+        try {
+            // 创建Http Post请求
+            HttpPost httpPost = new HttpPost(url);
+            // 创建请求内容
+            StringEntity entity = new StringEntity(json, ContentType.APPLICATION_JSON);
+            httpPost.setEntity(entity);
+            // 执行http请求
+            response = httpClient.execute(httpPost);
+            int statusCode = response.getStatusLine().getStatusCode();
+            if (statusCode != 200) {
+                httpPost.abort();
+                throw new RuntimeException("HttpClient,error status code :" + statusCode);
             }
-            return jsonObject;
+            resultString = EntityUtils.toString(response.getEntity(), "utf-8");
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                response.close();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+        return JSONObject.parseObject(resultString);
 
     }
 

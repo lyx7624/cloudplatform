@@ -10,13 +10,14 @@ import com.zcyk.pojo.LiveApp;
 import com.zcyk.service.LiveAppService;
 import com.zcyk.service.LiveService;
 import com.zcyk.util.*;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.groups.Default;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -27,6 +28,7 @@ import java.util.List;
  * @date 2020/4/13 15:43
  */
 @RestController
+@Slf4j
 @RequestMapping("/LCipc")
 public class LiveController {
 
@@ -44,7 +46,7 @@ public class LiveController {
      * 返回值：
     */
     @RequestMapping("addLeCheng")
-    public ResultData addLeCheng(LiveApp liveApp){
+    public ResultData addLeCheng(LiveApp liveApp) throws Exception {
         if (liveApp.getType()==1) {//如果是大华应用
             HashMap<String, Object> paramMap = new HashMap<>();
             String method = "accessToken";
@@ -74,7 +76,13 @@ public class LiveController {
             String secret_id = liveApp.getSecret_id();
             paramsMap.put("appKey",app_id);
             paramsMap.put("appSecret",secret_id);
-            String content = HttpClientUtils.getContent("https://open.ys7.com/api/lapp/token/get", paramsMap);
+            String content = null;
+            try {
+                    content = HttpClientUtils.getContent("https://open.ys7.com/api/lapp/token/get", paramsMap);
+                } catch (Exception e) {//
+                    log.error("绑定海康应用失败：",e);
+                    throw new Exception("海康远程服务器错误，请稍后重试");
+            }
             JSONObject json = JSONObject.parseObject(content);
             String code = json.getString("code");
             String msg = json.getString("msg");

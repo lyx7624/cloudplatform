@@ -10,8 +10,6 @@ import java.util.List;
 import java.util.Map;
 
 
-@Service
-
 public interface ProjectfolderService {
     /*添加项目父文件夹*/
     void addProjectParentFolder(Project project, String user_id)throws Exception;

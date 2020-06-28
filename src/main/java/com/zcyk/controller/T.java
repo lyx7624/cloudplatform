@@ -2,11 +2,19 @@ package com.zcyk.controller;
 
 
 import com.zcyk.dto.ResultData;
+import com.zcyk.util.WordUtils;
 
 public class T {
 
     public static void main(String[] args) throws Exception {
 
+
+        System.out.println(Double.MAX_VALUE+"");
+
+        WordUtils.pdf2word("C:\\Users\\Administrator\\Documents\\WXWork\\1688851136398927\\Cache\\File\\2020-06\\劳务实名制数据库国家标准字段.doc","C:\\Users\\Administrator\\Documents\\WXWork\\1688851136398927\\Cache\\File\\2020-06\\劳务实名制数据库国家标准字段.pdf");
+
+
+/*
         Runtime run = Runtime.getRuntime();
 
         long max = run.maxMemory();
@@ -40,6 +48,7 @@ public class T {
         System.out.println("1已分配内存 = " + total1/(1024*1024));
         System.out.println("1已分配内存中的剩余空间 = " + free1/(1024*1024));
         System.out.println("1最大可用内存 = " + usable1/(1024*1024));
+*/
 
 
     }

@@ -1,5 +1,6 @@
 package com.zcyk.service;
 
+import com.github.pagehelper.Page;
 import com.github.pagehelper.PageInfo;
 import com.zcyk.dto.Download;
 import com.zcyk.pojo.*;
@@ -189,5 +190,13 @@ public interface ProjectService {
     /*获取用户所在的项目*/
     List<Project> getUserAllProject(String user_account);
 
+    /*临时          项目构件   2020-05-19新加 */
+    void updateComponent(ProjectComponent projectComponent);
 
+    PageInfo<ProjectComponent> getProjectComponent(String project_id, int pageNum, int pageSize);
+
+    void deleteProjectComponent(String id);
+
+
+    /*临时          项目构件   2020-05-19新加 */
 }

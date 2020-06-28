@@ -18,7 +18,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 功能描述: 项目质量
@@ -267,4 +271,5 @@ public class ProjectQualityController {
         return new ResultData().setMsg("删除计划成功").setStatus("200");
 
     }
+
 }

@@ -33,6 +33,9 @@ public class ResultData implements Serializable {
     public static ResultData failResultData (){
        return new ResultData("400","操作失败",null);
     }
+    public static ResultData WRITE (String code,String msg,Object data){
+       return new ResultData(code,msg,data);
+    }
 
 
 }

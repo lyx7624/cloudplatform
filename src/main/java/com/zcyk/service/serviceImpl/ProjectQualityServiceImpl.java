@@ -69,7 +69,7 @@ public class ProjectQualityServiceImpl implements ProjectQualityService {
             int count = qualityMapper.selectDateCount(now.format(format),projectQualityInspection.getProject_id());
             long l = Long.parseLong(now.format(format) + "0000")+count+1;
             projectQualityInspection.setId(UUID.randomUUID().toString()).setStatus(1).setInspection_number(String.valueOf(l)).setAppointed_date(new Date());
-            qualityMapper.insert(projectQualityInspection);
+            qualityMapper.insertSelective(projectQualityInspection);
 
 
             //是否关联巡检问题
@@ -313,4 +313,19 @@ public class ProjectQualityServiceImpl implements ProjectQualityService {
     public ProjectQualityInspection selectQualityByDetails(String id) {
         return qualityMapper.selectByDetailsId(id);
     }
+
+    /*临时*/
+
+    @Override
+    public List<ProjectQualityPlan> getProjectQualityInspection(String project_id) {
+        return qualityPlanMapper.selectByProject("",project_id);
+    }
+
+    @Override
+    public List<ProjectQualityInspection> getQualityByProjectId(String project_id) {
+        return qualityMapper.selectQualityByProjectId(project_id, "");
+    }
+
+    /*临时*/
+
 }

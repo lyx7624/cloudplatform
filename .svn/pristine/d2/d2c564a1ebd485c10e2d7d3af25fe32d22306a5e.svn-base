@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <include resource="org/springframework/boot/logging/logback/base.xml" />
+<!--    <property name="LOG_HOME" value=" D:/data/sysLog" />  D:/work/home/cloud/file/-->
+    <property name="LOG_HOME" value=" D:/home/cloud/data/sysLog"/>
+
+    <!--写入日志到控制台的appender,用默认的,但是要去掉charset,否则windows下tomcat下乱码-->
+    <appender name="ConsoleLog" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+            <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符-->
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+
+    <appender name="InfoLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!--如果只是想要 Info 级别的日志，只是过滤 info 还是会输出 Error 日志，因为 Error 的级别高，
+        所以我们使用下面的策略，可以避免输出 Error 的日志-->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <!--过滤 Error-->
+            <level>ERROR</level>
+            <!--匹配到就禁止-->
+            <onMatch>DENY</onMatch>
+            <!--没有匹配到就允许-->
+            <onMismatch>ACCEPT</onMismatch>
+        </filter>
+        <!--日志名称，如果没有File 属性，那么只会使用FileNamePattern的文件路径规则
+            如果同时有<File>和<FileNamePattern>，那么当天日志是<File>，明天会自动把今天
+            的日志改名为今天的日期。即，<File> 的日志都是当天的。
+        -->
+        <File>${LOG_HOME}/InfoLog.sysLog</File>
+        <!--滚动策略，按照时间滚动 TimeBasedRollingPolicy-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!--文件路径,定义了日志的切分方式——把每一天的日志归档到一个文件中,以防止日志填满整个磁盘空间-->
+            <FileNamePattern>${LOG_HOME}/InfoLog/InfoLog.%d{yyyy-MM-dd}.sysLog</FileNamePattern>
+            <!--只保留最近90天的日志-->
+            <maxHistory>30</maxHistory>
+            <!--用来指定日志文件的上限大小，那么到了这个值，就会删除旧的日志-->
+            <!--<totalSizeCap>1GB</totalSizeCap>-->
+        </rollingPolicy>
+        <!--日志输出编码格式化-->
+        <encoder>
+            <charset>UTF-8</charset><!--[%thread] -->
+            <pattern>%d{YYYY-MM-dd HH:mm:ss} %-5level %logger{36} %line - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="ErrorLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!--只输出 error-->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <!--匹配到就通过-->
+            <onMatch>ACCEPT</onMatch>
+            <!--没有匹配到禁止-->
+            <onMismatch>DENY</onMismatch>
+        </filter>
+
+        <!--日志名称，如果没有File 属性，那么只会使用FileNamePattern的文件路径规则
+            如果同时有<File>和<FileNamePattern>，那么当天日志是<File>，明天会自动把今天
+            的日志改名为今天的日期。即，<File> 的日志都是当天的。
+        -->
+        <File>${LOG_HOME}/errorLog.sysLog</File>
+        <!--滚动策略，按照时间滚动 TimeBasedRollingPolicy-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!--文件路径,定义了日志的切分方式——把每一天的日志归档到一个文件中,以防止日志填满整个磁盘空间-->
+            <FileNamePattern>${LOG_HOME}/ErrorLog/errorLog.%d{yyyy-MM-dd}.sysLog</FileNamePattern>
+            <!--只保留最近90天的日志-->
+            <maxHistory>90</maxHistory>
+            <!--用来指定日志文件的上限大小，那么到了这个值，就会删除旧的日志-->
+            <!--<totalSizeCap>1GB</totalSizeCap>-->
+        </rollingPolicy>
+        <!--日志输出编码格式化-->
+        <encoder>
+            <charset>UTF-8</charset><!--[%thread] -->
+            <pattern>%d{YYYY-MM-dd HH:mm:ss} %-5level %logger{36} %line - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+
+
+    <springProfile name="dev">
+
+        <root level="INFO">
+            <appender-ref ref="InfoLog"/>
+            <appender-ref ref="ErrorLog"/>
+        </root>
+        <logger name="com.zcyk.mapper" level="DEBUG">
+            <appender-ref ref="InfoLog"/>
+        </logger>
+    </springProfile>
+
+
+    <springProfile name="test">
+        <root level="INFO">
+            <appender-ref ref="InfoLog"/>
+            <appender-ref ref="ErrorLog"/>
+        </root>
+        <logger name="com.zcyk.mapper" level="DEBUG">
+            <appender-ref ref="InfoLog"/>
+        </logger>
+    </springProfile>
+
+    <springProfile name="pro">
+        <!--日志等级设置-->
+        <root level="INFO">
+            <appender-ref ref="InfoLog"/>
+            <appender-ref ref="ErrorLog"/>
+        </root>
+
+        <logger name="sun.rmi.server" level="DEBUG">
+            <appender-ref ref="InfoLog"/>
+        </logger>
+
+        <logger name="com.zcyk.mapper" level="DEBUG">
+            <appender-ref ref="InfoLog"/>
+        </logger>
+    </springProfile>
+
+</configuration>

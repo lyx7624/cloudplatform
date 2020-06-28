@@ -2,22 +2,10 @@ package com.zcyk.util;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.util.*;
 
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.methods.PostMethod;
-import org.apache.commons.httpclient.methods.RequestEntity;
-import org.apache.commons.httpclient.methods.StringRequestEntity;
-import org.apache.commons.httpclient.protocol.Protocol;
-import org.apache.commons.httpclient.protocol.ProtocolSocketFactory;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.*;
 import org.apache.http.client.config.RequestConfig;
@@ -40,6 +28,7 @@ import org.apache.http.util.EntityUtils;
 /**
  * 基于 httpclient 4.5版本的 http工具类
  */
+
 public class HttpClientUtils {
     private static final CloseableHttpClient httpClient;
     public static final String CHARSET = "UTF-8";
@@ -108,7 +97,7 @@ public class HttpClientUtils {
      * 返回值：
      * 异常：
      */
-    public static String doPost(String url, Map<String, String> params, String authorization,String contentType)
+    public static String doPost(String url, Map<String, Object> params, String authorization,String contentType)
             throws IOException {
         if (StringUtils.isBlank(url)) {
             return null;
@@ -116,8 +105,8 @@ public class HttpClientUtils {
         List<NameValuePair> pairs = null;
         if (params != null && !params.isEmpty()) {
             pairs = new ArrayList<>(params.size());
-            for (Map.Entry<String, String> entry : params.entrySet()) {
-                String value = entry.getValue();
+            for (Map.Entry<String, Object> entry : params.entrySet()) {
+                String value = entry.getValue().toString();
                 if (value != null) {
                     pairs.add(new BasicNameValuePair(entry.getKey(), value));
                 }
@@ -125,7 +114,8 @@ public class HttpClientUtils {
         }
         HttpPost httpPost = new HttpPost(url);
         httpPost.setHeader("Content-type", contentType==null?"\"application/json;charset=UTF-8\"":contentType);
-        httpPost.setHeader("Authorization","Bearer "+authorization);
+        httpPost.setHeader("Authorization",authorization==null?"":"Bearer "+authorization);
+
 
         if (pairs != null && pairs.size() > 0) {
             httpPost.setEntity(new UrlEncodedFormEntity(pairs, CHARSET));
@@ -213,7 +203,7 @@ public class HttpClientUtils {
             StringEntity entity = new StringEntity(json, ContentType.APPLICATION_JSON);
             httpPost.setEntity(entity);
             httpPost.setHeader("Content-type", contentType==null?"application/json":contentType);
-            httpPost.setHeader("Authorization","Bearer "+authorization);
+            httpPost.setHeader("Authorization",authorization==null?"":"Bearer "+authorization);
             // 执行http请求
             response = httpClient.execute(httpPost);
             int statusCode = response.getStatusLine().getStatusCode();
@@ -353,7 +343,7 @@ public class HttpClientUtils {
      * 参数：[ * @param null]
      * 返回值：
     */
-    public static String getContent(String url, Map<String, Object> mapdata) {
+    public static String getContent(String url, Map<String, Object> mapdata){
         CloseableHttpResponse response = null;
         CloseableHttpClient httpClient = HttpClients.createDefault();
         // 创建httppost

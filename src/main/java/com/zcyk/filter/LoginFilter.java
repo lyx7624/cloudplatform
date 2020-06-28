@@ -31,7 +31,7 @@ import java.util.*;
  * 开发人员: xlyx
  * 创建日期: 2019/9/2 15:21
  */
-@WebFilter(urlPatterns = "/*", filterName = "myfilter")
+@WebFilter(urlPatterns = "/*", filterName = "loginFilter")
 @Order(1)
 public class LoginFilter implements Filter {
 
@@ -39,10 +39,10 @@ public class LoginFilter implements Filter {
     /*不拦截的接口*/
     private static final Set<String> ALLOWED_PATHS = Collections.unmodifiableSet(new HashSet<>(
             Arrays.asList("/getCode", "/login", "/getCodePic", "/singin", "/addCompany", "/forgetPwd","/FileDownload","/OfficeServer","/temp/"
-                    ,"/ProcessInfo/getPDF","/ProcessInfo/savePDF"
+                    ,"/ProcessInfo/getPDF","/ProcessInfo/savePDF","/bim"
             )));
 
-    @Value("${AllowedOriginsIP}"+"/")
+    @Value("${allowedOriginsIP}"+"/")
     String allowedOriginsIP;
 
 
@@ -61,15 +61,12 @@ public class LoginFilter implements Filter {
         String path = req.getRequestURI().substring(req.getContextPath().length()).replaceAll("[/]+$", "");
 
         Integer inLoginUsers = LoginUserMap.isInLoginUsers(login_user_key, user_token);//用户登录容器校验
-        System.out.println(
-                "login_user_key:"+login_user_key+
-                "\n user_token:"+user_token+
-                "\n inLoginUsers:"+inLoginUsers);
+
 
         if(!req.getMethod().equals("OPTIONS")){//预请求不验证权限
-            if(ALLOWED_PATHS.contains(path) || path.contains("/temp/")){//相关接口不拦截，访问临时文件不拦截
+            if(ALLOWED_PATHS.contains(path) || path.contains("/temp/") || path.contains("/bim/")){//相关接口不拦截，访问临时文件不拦截
                 chain.doFilter(req, res);
-            }else if(!allowedOriginsIP.equals(referer) || StringUtils.isBlank(user_token)) {//请求没有带上token或者非前端请求
+            }else if(/*!allowedOriginsIP.equals(referer) ||*/ StringUtils.isBlank(user_token)) {//请求没有带上token或者非前端请求
                 res.setStatus(555);
                 res.sendRedirect(allowedOriginsIP + "#/userLogin");//跳转到登录页面
 

@@ -1,5 +1,6 @@
 package com.zcyk.service.serviceImpl;
 
+import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.zcyk.dto.Download;
@@ -10,6 +11,7 @@ import com.zcyk.service.FileService;
 import com.zcyk.service.ProjectService;
 import com.zcyk.service.UserService;
 import com.zcyk.util.*;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
+import tk.mybatis.mapper.entity.Example;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -97,6 +100,11 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Autowired
     UserService userService;
+
+
+
+    @Autowired
+    ProjectComponentMapper projectComponentMapper;
     /**
      * 功能描述：查询工程动态
      * 开发人员： lyx
@@ -1311,4 +1319,29 @@ public class ProjectServiceImpl implements ProjectService {
         return new ResultData().setStatus("200").setMsg("成功").setData(model_qualities);
     }
 
+    /*临时          项目构件   2020-05-19新加 */
+    @Override
+    public void updateComponent(ProjectComponent projectComponent) {
+        if(StringUtils.isBlank(projectComponent.getId())){
+            projectComponentMapper.insertSelective(projectComponent.setId(UUID.randomUUID().toString()).setCreate_time(new Date()));
+        }else {
+            projectComponentMapper.updateByPrimaryKeySelective(projectComponent);
+        }
+
+    }
+
+    @Override
+    public PageInfo<ProjectComponent> getProjectComponent(String project_id, int pageNum, int pageSize) {
+        Example example = new Example(ProjectComponent.class);
+        example.and().andEqualTo("project_id",project_id);
+        PageHelper.startPage(pageNum,pageSize);
+        List<ProjectComponent> projectComponents = projectComponentMapper.selectByExample(example);
+        return new PageInfo<>(projectComponents);
+    }
+
+    @Override
+    public void deleteProjectComponent(String id) {
+        projectComponentMapper.deleteByPrimaryKey(id);
+    }
+    /*临时          项目构件   2020-05-19新加 */
 }

@@ -20,8 +20,8 @@ public interface UserMapper extends Mapper<User> {
     @Select("select * from t_user where  user_status = 1 and user_account = #{useraccount}")
     User selectUserByAccount(@Param("useraccount") String useraccount);
 
-    @Update("update t_user set iscompanymanager = #{statu} where id = #{0}")
-    int setCompanyManager(String user_id, int statu);
+    @Update("update t_user set iscompanymanager = #{status} where id = #{id}")
+    int setCompanyManager(@Param("id") String user_id,@Param("status") int status);
 
     @Select("select * from t_user where  user_status = 1 and company_id = #{0}")
     List<User> selectAllUser(String company_id);

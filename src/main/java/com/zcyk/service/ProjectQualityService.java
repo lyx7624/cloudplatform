@@ -156,4 +156,12 @@ public interface ProjectQualityService {
      * 异常：
      */
     ProjectQualityInspection selectQualityByDetails(String id);
+    /*临时*/
+
+    List<ProjectQualityPlan> getProjectQualityInspection(String project_id);
+
+    List<ProjectQualityInspection> getQualityByProjectId(String project_id);
+
+    /*临时*/
+
 }

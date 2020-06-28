@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="DBstep">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/DBstep.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/ojdbc14.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

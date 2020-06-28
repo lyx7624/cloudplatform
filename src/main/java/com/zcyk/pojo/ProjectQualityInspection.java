@@ -10,7 +10,14 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
-
+/**
+* 功能描述:质量问题、安全问题
+* 版本信息: Copyright (c)2019
+* 公司信息: 智辰云科
+* 开发人员: lyx
+* 版本日志: 1.0
+* 创建日期: 2020/5/19 9:27
+*/
 @Data
 @Entity
 @Table(name = "project_quality_inspection")
@@ -64,6 +71,10 @@ public class ProjectQualityInspection {
   private String sub_project;
   /*分项工程名称*/
   private String item_project;
+/*w问题类型：质量问题 安全问题*/
+  private String   problem_type;
+
+
 
   /*所对应的的巡检计划*/
   private String quality_plan_details_id;
